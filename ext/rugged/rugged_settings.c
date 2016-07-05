@@ -70,6 +70,19 @@ static VALUE set_user_agent(VALUE value)
 	rugged_exception_check(git_libgit2_opts(GIT_OPT_SET_USER_AGENT, ua));
 }
 
+static VALUE get_user_agent()
+{
+	git_buf buf = {NULL};
+	VALUE ret;
+
+	rugged_exception_check(git_libgit2_opts(GIT_OPT_GET_USER_AGENT, &buf));
+
+	ret = rb_str_new_utf8(buf.ptr);
+	git_buf_free(&buf);
+
+	return ret;
+}
+
 /*
  *  call-seq:
  *    Settings[option] = value
@@ -160,6 +173,10 @@ static VALUE rb_git_get_option(VALUE self, VALUE option)
 
 	else if (strcmp(opt, "search_path_system") == 0) {
 		return get_search_path(GIT_CONFIG_LEVEL_SYSTEM);
+	}
+
+	else if (strcmp(opt, "user_agent") == 0) {
+		return get_user_agent();
 	}
 
 	else {

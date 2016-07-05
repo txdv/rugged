@@ -28,6 +28,12 @@ class RuggedTest < Rugged::TestCase
     assert_raises(TypeError) { Rugged::Settings['mwindow_size'] = nil }
   end
 
+  def test_user_agent
+    assert_equal Rugged::Settings['user_agent'], ""
+    Rugged::Settings['user_agent'] = 'super duper git'
+    assert_equal Rugged::Settings['user_agent'], 'super duper git'
+  end
+
   def test_search_path
     paths = [['search_path_global', '/tmp/global'],
              ['search_path_xdg', '/tmp/xdg'],
