@@ -59,6 +59,17 @@ static VALUE get_search_path(int level)
 	return ret;
 }
 
+static VALUE set_user_agent(VALUE value)
+{
+
+	const char *ua;
+
+	Check_Type(value, T_STRING);
+	ua = StringValueCStr(value);
+
+	rugged_exception_check(git_libgit2_opts(GIT_OPT_SET_USER_AGENT, ua));
+}
+
 /*
  *  call-seq:
  *    Settings[option] = value
@@ -101,6 +112,10 @@ static VALUE rb_git_set_option(VALUE self, VALUE option, VALUE value)
 	else if (strcmp(opt, "strict_object_creation") == 0) {
 		int strict = RTEST(value) ? 1 : 0;
 		git_libgit2_opts(GIT_OPT_ENABLE_STRICT_OBJECT_CREATION, strict);
+	}
+
+	else if (strcmp(opt, "user_agent") == 0) {
+		set_user_agent(value);
 	}
 
 	else {
